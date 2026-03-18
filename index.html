@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RE/MAX Property Explorer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+  <div class="nav-container">
+
+    <div class="nav-left">
+      <div class="nav-logo">
+        <span class="logo-remax">RE/MAX</span>
+        <span class="logo-city">Victoria</span>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="menu-item">
+        Quiero comprar
+        <div class="dropdown">
+          <p>SIMULADOR HIPOTECARIO</p>
+          <p>Opciones para crédito FOVISSSTE</p>
+          <p>Opciones para crédito INFONAVIT</p>
+          <p>Opciones para crédito Bancario</p>
+          <p>Oportunidad de inversión</p>
+        </div>
+      </li>
+
+      <li>Aviso de privacidad</li>
+      <li>Agentes Victoriosos</li>
+      <li>Contacto</li>
+      <li>Más...</li>
+    </ul>
+
+    <div class="nav-right">
+      <div class="nav-search">
+        <img src="img/lupa1.png" alt="Buscar">
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-overlay">
+    <div class="hero-content">
+      <h2>¿Deseas comprar casa con algún tipo de crédito?</h2>
+      <div class="hero-buttons">
+        <button onclick="fetchAllProperties()">Crédito Bancario</button>
+        <button onclick="fetchAllProperties()">FOVISSSTE</button>
+        <button onclick="fetchAllProperties()">INFONAVIT</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="section-header">
+    <h2 class="section-title">Propiedades recientemente</h2>
+    <p class="section-subtitle">Utiliza los filtros para encontrar tu propiedad ideal.</p>
+  </div>
+
+  <!-- 🔍 FILTRO -->
+  <div class="filter-bar">
+
+    <div class="filter-item">
+      <label>Ubicación</label>
+      <input type="text" id="searchLocation">
+    </div>
+
+    <div class="filter-item">
+      <label>Precio</label>
+      <select id="priceRange">
+        <option value="">Todos</option>
+        <option value="1">0 - 1M</option>
+        <option value="2">1M - 3M</option>
+        <option value="3">3M+</option>
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label>Categoría</label>
+      <select id="category">
+        <option value="">Todas</option>
+        <option value="casa">Casa</option>
+        <option value="departamento">Departamento</option>
+        <option value="terreno">Terreno</option>
+      </select>
+    </div>
+
+    <button class="filter-btn-search" onclick="applyFilters()">
+      <img src="img/lupa1.png">
+    </button>
+
+  </div>
+
+  <!-- 🔥 IMPORTANTE -->
+  <div id="loading" class="loading" style="display:none;">
+    <p>Cargando propiedades...</p>
+  </div>
+
+  <div id="results"></div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

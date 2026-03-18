@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RE/MAX Property Explorer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+--primary-blue:#0B2742;
+--remax-red:#E11B22;
+--light-gray:#f5f7fa;
+--text-dark:#2C3E50;
+--text-light:#7F8C8D;
+--border:#e2e8f0;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:#f5f7fa;
+color:var(--text-dark);
+}
+
+/* NAVBAR */
+
+.navbar{
+position:absolute;
+top:0;
+width:100%;
+padding:0.75rem 3rem;
+z-index:1000;
+transition:all 0.3s ease;
+}
+
+.navbar.scrolled{
+position:fixed;
+background:var(--primary-blue);
+box-shadow:0 4px 10px rgba(0,0,0,0.25);
+}
+
+.nav-container{
+display:flex;
+justify-content:space-between;
+align-items:center;
+max-width:1200px;
+margin:auto;
+}
+
+.nav-logo{
+display:flex;
+align-items:baseline;
+gap:4px;
+}
+
+.logo-remax{
+color:white;
+font-weight:700;
+font-size:1.25rem;
+}
+
+.logo-city{
+color:rgba(255,255,255,0.75);
+font-size:0.8rem;
+margin-left:2px;
+letter-spacing:1px;
+text-transform:uppercase;
+}
+
+.nav-menu{
+list-style:none;
+display:flex;
+gap:1.8rem;
+align-items:center;
+color:white;
+font-size:0.875rem;
+cursor:pointer;
+}
+
+/* HERO */
+
+.hero{
+height:100vh;
+background:url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c") center/cover no-repeat;
+display:flex;
+align-items:center;
+}
+
+.hero-overlay{
+background:rgba(0,0,0,0.6);
+width:100%;
+height:100%;
+display:flex;
+align-items:center;
+}
+
+.hero-content{
+color:white;
+margin-left:10%;
+max-width:600px;
+}
+
+.hero-content h2{
+font-size:2rem;
+margin-bottom:1rem;
+}
+
+.hero-buttons{
+margin-top:20px;
+display:flex;
+gap:15px;
+}
+
+.hero-buttons button{
+background:var(--primary-blue);
+color:white;
+padding:12px 25px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.hero-buttons button:hover{
+background:var(--remax-red);
+}
+
+/* CONTAINER */
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:2.5rem 1.5rem;
+}
+
+/* SECTION HEADER */
+
+.section-header{
+margin-bottom:1.5rem;
+}
+
+.section-title{
+font-size:1.6rem;
+font-weight:700;
+margin-bottom:0.3rem;
+}
+
+.section-subtitle{
+color:var(--text-light);
+font-size:0.95rem;
+}
+
+/* FILTER BAR */
+
+.filter-bar{
+background:white;
+border:1px solid var(--border);
+border-radius:12px;
+padding:0.75rem 1rem;
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:2rem;
+flex-wrap:wrap;
+}
+
+.filters-left{
+display:flex;
+gap:0.5rem;
+flex-wrap:wrap;
+}
+
+.filter-btn{
+display:flex;
+align-items:center;
+gap:5px;
+padding:7px 14px;
+border:1px solid var(--border);
+border-radius:8px;
+background:white;
+font-size:0.85rem;
+cursor:pointer;
+}
+
+/* GRID */
+
+.property-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:1.5rem;
+}
+
+/* CARD */
+
+.property-card{
+background:white;
+border-radius:14px;
+overflow:hidden;
+box-shadow:0 2px 12px rgba(0,0,0,0.07);
+transition:0.3s ease;
+cursor:pointer;
+}
+
+.property-card:hover{
+transform:translateY(-4px);
+box-shadow:0 8px 25px rgba(0,0,0,0.12);
+}
+
+.property-image-wrap{
+position:relative;
+height:200px;
+overflow:hidden;
+}
+
+.property-image{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.remax-badge{
+position:absolute;
+top:12px;
+left:12px;
+background:white;
+padding:4px 8px;
+border-radius:5px;
+font-weight:700;
+font-size:0.7rem;
+color:var(--remax-red);
+}
+
+/* BODY */
+
+.property-body{
+padding:1rem;
+}
+
+.property-title{
+font-weight:600;
+font-size:0.95rem;
+margin-bottom:4px;
+}
+
+.property-agent{
+display:flex;
+align-items:center;
+gap:5px;
+color:var(--remax-red);
+font-size:0.8rem;
+margin-bottom:6px;
+}
+
+.agent-dot{
+width:8px;
+height:8px;
+background:var(--remax-red);
+border-radius:50%;
+}
+
+.property-address{
+font-size:0.78rem;
+color:var(--text-light);
+}
+
+.property-price{
+font-size:1.15rem;
+font-weight:700;
+margin-top:8px;
+}
+
+/* PRICE BAR */
+
+.price-bar-wrap{
+height:4px;
+background:#e8edf2;
+border-radius:4px;
+margin-top:8px;
+overflow:hidden;
+}
+
+.price-bar{
+height:100%;
+border-radius:4px;
+background:linear-gradient(to right,var(--primary-blue),#4A90E2);
+}
+
+/* FEATURES */
+
+.property-features{
+display:flex;
+gap:14px;
+padding:0.5rem 1rem 0.6rem;
+font-size:0.78rem;
+color:var(--text-light);
+border-top:1px solid #f0f0f0;
+}
+
+.feature{
+display:flex;
+align-items:center;
+gap:4px;
+}
+
+/* FOOTER */
+
+.property-footer{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0.6rem 1rem;
+border-top:1px solid var(--border);
+}
+
+.agent-info{
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.agent-avatar{
+width:28px;
+height:28px;
+border-radius:50%;
+background:linear-gradient(135deg,var(--primary-blue),#4A90E2);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:0.65rem;
+font-weight:700;
+color:white;
+}
+
+.agent-name{
+font-size:0.78rem;
+}
+
+.card-actions{
+display:flex;
+gap:10px;
+}
+
+.action-btn{
+background:none;
+border:none;
+cursor:pointer;
+color:var(--text-light);
+font-size:0.85rem;
+}
+
+.loading{
+text-align:center;
+padding:3rem;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+.property-grid{grid-template-columns:1fr;}
+.nav-menu{display:none;}
+}
+
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+<div class="nav-container">
+<div class="nav-logo">
+<span class="logo-remax">RE/MAX</span>
+<span class="logo-city">Victoria</span>
+</div>
+<ul class="nav-menu">
+<li>Quiero comprar</li>
+<li>Aviso de privacidad</li>
+<li>Agentes Victoriosos</li>
+<li>Contacto</li>
+<li>Más...</li>
+</ul>
+</div>
+</nav>
+
+<section class="hero">
+<div class="hero-overlay">
+<div class="hero-content">
+<h2>¿Deseas comprar casa con algún tipo de crédito?</h2>
+<p>Da clic en cualquiera de las opciones y revisa el inventario disponible.</p>
+<div class="hero-buttons">
+<button onclick="fetchAllProperties()">Crédito Bancario</button>
+<button onclick="fetchAllProperties()">FOVISSSTE</button>
+<button onclick="fetchAllProperties()">INFONAVIT</button>
+</div>
+</div>
+</div>
+</section>
+
+<div class="container">
+
+<div class="section-header">
+<h2 class="section-title">Propiedades recientemente</h2>
+<p class="section-subtitle">Utiliza los filtros para encontrar tu propiedad ideal.</p>
+</div>
+
+<div id="loading" class="loading" style="display:none;">
+<p>Cargando propiedades...</p>
+</div>
+
+<div id="results"></div>
+
+</div>
+
+<script>
+
+const API_BASE='http://localhost:3000/api';
+
+window.addEventListener("scroll",function(){
+const navbar=document.querySelector(".navbar");
+if(window.scrollY>80){
+navbar.classList.add("scrolled");
+}else{
+navbar.classList.remove("scrolled");
+}
+});
+
+async function fetchAllProperties(){
+
+document.getElementById('loading').style.display='block';
+document.getElementById('results').innerHTML='';
+
+try{
+
+const response=await fetch(`${API_BASE}/propiedades`);
+const data=await response.json();
+
+let properties=[];
+
+if(Array.isArray(data)) properties=data;
+else if(data.data) properties=data.data;
+else if(data.propiedades) properties=data.propiedades;
+
+renderProperties(properties);
+
+}catch(error){
+
+renderProperties(MOCK_PROPERTIES);
+
+}
+
+document.getElementById('loading').style.display='none';
+
+}
+
+function renderProperties(properties){
+
+const results=document.getElementById('results');
+
+results.innerHTML=`
+
+<div class="property-grid">
+
+${properties.map(prop=>{
+
+const image=prop.imagen || prop.image || prop.foto || 'https://picsum.photos/400/250';
+
+const price=formatPrice(prop.precio || prop.price || 0);
+
+const title=prop.titulo || prop.title || 'Propiedad';
+
+const location=prop.ubicacion || prop.location || 'Ubicación no disponible';
+
+const barWidth=Math.floor(Math.random()*60+20);
+
+return`
+
+<div class="property-card">
+
+<div class="property-image-wrap">
+
+<img src="${image}" class="property-image">
+
+<div class="remax-badge">RE/MAX</div>
+
+</div>
+
+<div class="property-body">
+
+<div class="property-title">${title}</div>
+
+<div class="property-address">📍 ${location}</div>
+
+<div class="property-price">${price}</div>
+
+<div class="price-bar-wrap">
+<div class="price-bar" style="width:${barWidth}%"></div>
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}).join('')}
+
+</div>
+
+`;
+
+}
+
+function formatPrice(price){
+
+return new Intl.NumberFormat('es-MX',{
+style:'currency',
+currency:'MXN',
+minimumFractionDigits:0
+}).format(price);
+
+}
+
+document.addEventListener('DOMContentLoaded',fetchAllProperties);
+
+</script>
+
+</body>
+</html>
