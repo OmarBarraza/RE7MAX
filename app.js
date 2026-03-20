@@ -2,6 +2,18 @@ const API_BASE = 'http://localhost:3000/api';
 
 let allProperties = [];
 
+/* ===== NAVBAR SCROLL ===== */
+window.addEventListener("scroll", function(){
+  const navbar = document.querySelector(".navbar");
+
+  if(window.scrollY > 50){
+    navbar.classList.add("scrolled");
+  } else {
+    navbar.classList.remove("scrolled");
+  }
+});
+
+/* ===== FETCH PROPERTIES ===== */
 async function fetchAllProperties(){
 
 const loading = document.getElementById('loading');
@@ -39,6 +51,7 @@ if(loading) loading.style.display='none';
 
 }
 
+/* ===== RENDER ===== */
 function renderProperties(properties){
 
 const results = document.getElementById('results');
@@ -68,6 +81,7 @@ ${properties.map(p=>`
 
 }
 
+/* ===== FILTROS ===== */
 function applyFilters(){
 
 if(!allProperties.length) return;
@@ -98,6 +112,7 @@ renderProperties(filtered);
 
 }
 
+/* ===== MOCK ===== */
 function getMockProperties(){
 return[
 {titulo:"Casa en Durango",ubicacion:"Durango",precio:2500000,tipo:"casa",imagen:"https://picsum.photos/400/250?1"},
@@ -106,4 +121,20 @@ return[
 ];
 }
 
+/* ===== TESTIMONIOS (OPCIONAL JS MEJORAS) ===== */
+document.addEventListener("DOMContentLoaded", () => {
+  const track = document.querySelector(".carousel-track");
+
+  if(track){
+    track.addEventListener("mouseenter", () => {
+      track.style.animationPlayState = "paused";
+    });
+
+    track.addEventListener("mouseleave", () => {
+      track.style.animationPlayState = "running";
+    });
+  }
+});
+
+/* ===== INIT ===== */
 window.onload = fetchAllProperties;

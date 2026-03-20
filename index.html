@@ -6,49 +6,57 @@
 <title>RE/MAX Property Explorer</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar">
   <div class="nav-container">
 
-    <div class="nav-left">
-      <div class="nav-logo">
-        <span class="logo-remax">RE/MAX</span>
-        <span class="logo-city">Victoria</span>
-      </div>
+    <div class="nav-logo">
+      <span class="logo-remax">RE/MAX</span>
+      <span class="logo-city">Victoria</span>
     </div>
 
     <ul class="nav-menu">
       <li class="menu-item">
-        Quiero comprar
+        <span>Quiero comprar ▾</span>
         <div class="dropdown">
-          <p>SIMULADOR HIPOTECARIO</p>
-          <p>Opciones para crédito FOVISSSTE</p>
-          <p>Opciones para crédito INFONAVIT</p>
-          <p>Opciones para crédito Bancario</p>
-          <p>Oportunidad de inversión</p>
+          <p>Simulador hipotecario</p>
+          <p>FOVISSSTE</p>
+          <p>INFONAVIT</p>
         </div>
       </li>
 
-      <li>Aviso de privacidad</li>
-      <li>Agentes Victoriosos</li>
-      <li>Contacto</li>
-      <li>Más...</li>
+      <li class="menu-item">
+        <span>Aviso de privacidad ▾</span>
+        <div class="dropdown">
+          <p>Contrato NOM 247</p>
+          <p>Código de ética</p>
+        </div>
+      </li>
+
+      <li class="menu-item">Agentes Victoriosos</li>
+      <li class="menu-item">Contacto</li>
     </ul>
 
-    <div class="nav-right">
-      <div class="nav-search">
-        <img src="img/lupa1.png" alt="Buscar">
+    <div class="nav-search">
+      <div class="search-box">
+        <input type="text" class="search-text">
+        <a href="#" class="search-btn">
+          <i class="material-icons">search</i>
+        </a>
       </div>
     </div>
 
   </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
   <div class="hero-overlay">
     <div class="hero-content">
@@ -62,57 +70,74 @@
   </div>
 </section>
 
+<!-- CONTENIDO -->
 <div class="container">
 
   <div class="section-header">
     <h2 class="section-title">Propiedades recientemente</h2>
-    <p class="section-subtitle">Utiliza los filtros para encontrar tu propiedad ideal.</p>
   </div>
 
-  <!-- 🔍 FILTRO -->
-  <div class="filter-bar">
-
-    <div class="filter-item">
-      <label>Ubicación</label>
-      <input type="text" id="searchLocation">
-    </div>
-
-    <div class="filter-item">
-      <label>Precio</label>
-      <select id="priceRange">
-        <option value="">Todos</option>
-        <option value="1">0 - 1M</option>
-        <option value="2">1M - 3M</option>
-        <option value="3">3M+</option>
-      </select>
-    </div>
-
-    <div class="filter-item">
-      <label>Categoría</label>
-      <select id="category">
-        <option value="">Todas</option>
-        <option value="casa">Casa</option>
-        <option value="departamento">Departamento</option>
-        <option value="terreno">Terreno</option>
-      </select>
-    </div>
-
-    <button class="filter-btn-search" onclick="applyFilters()">
-      <img src="img/lupa1.png">
-    </button>
-
-  </div>
-
-  <!-- 🔥 IMPORTANTE -->
-  <div id="loading" class="loading" style="display:none;">
-    <p>Cargando propiedades...</p>
-  </div>
-
-  <div id="results"></div>
+  <div id="results" class="property-grid"></div>
 
 </div>
 
-<script src="app.js"></script>
+<!-- TESTIMONIOS -->
+<section class="testimonials">
 
+  <h2>Testimoniales de nuestros clientes</h2>
+
+  <div class="carousel">
+    <div class="carousel-track">
+
+      <!-- ORIGINALES -->
+      <div class="testimonial-card">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg">
+        <h4>Erick</h4>
+        <div class="stars">★★★★★</div>
+        <p>Excelente servicio.</p>
+      </div>
+
+      <div class="testimonial-card">
+        <img src="https://randomuser.me/api/portraits/women/44.jpg">
+        <h4>Ana</h4>
+        <div class="stars">★★★★★</div>
+        <p>Muy buen acompañamiento.</p>
+      </div>
+
+      <div class="testimonial-card">
+        <img src="https://randomuser.me/api/portraits/men/65.jpg">
+        <h4>Lex</h4>
+        <div class="stars">★★★★★</div>
+        <p>100% recomendable.</p>
+      </div>
+
+      <!-- DUPLICADOS -->
+      <div class="testimonial-card">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg">
+        <h4>Erick</h4>
+        <div class="stars">★★★★★</div>
+        <p>Excelente servicio.</p>
+      </div>
+
+      <div class="testimonial-card">
+        <img src="https://randomuser.me/api/portraits/women/44.jpg">
+        <h4>Ana</h4>
+        <div class="stars">★★★★★</div>
+        <p>Muy buen acompañamiento.</p>
+      </div>
+
+      <div class="testimonial-card">
+        <img src="https://randomuser.me/api/portraits/men/65.jpg">
+        <h4>Lex</h4>
+        <div class="stars">★★★★★</div>
+        <p>100% recomendable.</p>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<script src="app.js"></script>
 </body>
 </html>
