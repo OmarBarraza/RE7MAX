@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Detalle Propiedad</title>
+
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="property.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!--NAVBAR  -->
+<nav class="navbar">
+  <div class="nav-container">
+
+    <div class="nav-logo">
+      <span class="logo-remax">
+  <img src="img/Remaxlogoblanco.png" class="logo-img">
+</span>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="menu-item">
+        <span>Quiero comprar ▾</span>
+        <div class="dropdown">
+          <p>Simulador hipotecario</p>
+          <p>FOVISSSTE</p>
+          <p>INFONAVIT</p>
+        </div>
+      </li>
+
+      <li class="menu-item">
+        <span>Aviso de privacidad ▾</span>
+        <div class="dropdown">
+          <p>Contrato NOM 247</p>
+          <p>Código de ética</p>
+        </div>
+      </li>
+
+      <li class="menu-item">Agentes Victoriosos</li>
+      <li class="menu-item">Contacto</li>
+    </ul>
+
+    <div class="nav-search">
+      <div class="search-box">
+        <input type="text" class="search-text">
+        <a href="#" class="search-btn">
+          <img src="img/lupa1.png" class="search-icon">
+        </a>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<!--  HERO  -->
+<div class="hero">
+  <div class="hero-text">
+    <h1 id="title"></h1>
+
+    <div class="info">
+      <span id="location"></span>
+      <span id="price"></span>
+    </div>
+  </div>
+
+  <div class="hero-img">
+    <img id="mainImage">
+  </div>
+</div>
+
+<!-- CONTENIDO  -->
+<div class="section">
+  <div class="grid">
+
+    <!-- IZQUIERDA -->
+    <div>
+
+      <div class="card">
+        <h2>Descripción</h2>
+        <p id="description"></p>
+      </div>
+
+      <div class="card gallery">
+        <img id="img1">
+        <img id="img2">
+        <img id="img3">
+      </div>
+
+      <div class="card">
+        <h2>Ubicación</h2>
+        <p id="ubicacionText"></p>
+      </div>
+
+    </div>
+
+    <!-- DERECHA -->
+    <div>
+
+      <div class="card">
+        <div class="price" id="priceSide"></div>
+
+        <button class="btn">Contactar</button>
+        <button class="btn" onclick="goBack()">Volver</button>
+
+        <div class="agent">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg">
+          <div>
+            <strong>Juan Pérez</strong><br>
+            Asesor inmobiliario
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script src="property.js"></script>
+
+</body>
+</html>
