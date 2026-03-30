@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detalle de Propiedad — RE/MAX Victoria</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="property-detail.css">
+</head>
+
+<body>
+
+<!-- ─── NAVBAR ─────────────────────────────────── -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="remax-properties-view.html" class="nav-logo">
+            <span class="logo-remax">RE/MAX</span>
+            <span class="logo-city">Victoria</span>
+        </a>
+        <ul class="nav-menu">
+            <li>Quiero comprar</li>
+            <li>Aviso de privacidad</li>
+            <li>Agentes Victoriosos</li>
+            <li>Contacto</li>
+            <li>Más...</li>
+        </ul>
+    </div>
+</nav>
+
+<!-- ─── BREADCRUMB ──────────────────────────────── -->
+<div class="breadcrumb" id="breadcrumb">
+    <a href="remax-properties-view.html">Propiedades</a>
+    <span class="sep">›</span>
+    <span id="bc-title">Cargando...</span>
+</div>
+
+<!-- ─── MAIN CONTAINER ─────────────────────────── -->
+<div class="container">
+
+    <!-- Loading state -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="spinner"></div>
+        <p>Cargando propiedad...</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="error-screen" class="error-msg" style="display:none;">
+        No se pudo cargar la propiedad. Verifica que la API esté disponible.
+    </div>
+
+    <!-- Main content (hidden until loaded) -->
+    <div id="detail-content" style="display:none;">
+
+        <!-- Property header -->
+        <div class="property-header">
+            <div class="property-badge" id="prop-badge">RE/MAX</div>
+            <h1 class="property-title" id="prop-title">—</h1>
+            <div class="property-meta" id="prop-meta"></div>
+            <div class="property-price-row">
+                <span class="price-main" id="prop-price">—</span>
+                <span class="price-label">MXN</span>
+            </div>
+        </div>
+
+        <!-- Gallery -->
+        <div class="gallery-wrap">
+            <div class="gallery-grid" id="gallery-grid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="details-section" id="section-features" style="display:none;">
+            <h3><span class="icon">🏠</span> Características</h3>
+            <div class="features-grid" id="features-grid"></div>
+        </div>
+
+        <!-- Description -->
+        <div class="details-section" id="section-desc" style="display:none;">
+            <h3><span class="icon">📋</span> Descripción</h3>
+            <p class="desc-text" id="prop-desc"></p>
+        </div>
+
+        <!-- Bullet points / highlights -->
+        <div class="details-section" id="section-bullets" style="display:none;">
+            <h3><span class="icon">✨</span> Destacados</h3>
+            <ul class="bullets-list" id="bullets-list"></ul>
+        </div>
+
+        <!-- MAP + AGENT -->
+        <div class="location-agent-row">
+
+            <!-- MAP -->
+            <div class="map-box">
+                <div class="map-box-header">
+                    <h3>
+                        <!-- Inline RE/MAX balloon icon -->
+                        <svg class="remax-pin" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 18 12 18s12-9 12-18c0-6.627-5.373-12-12-12z" fill="#E11B22"/>
+                            <text x="12" y="15" text-anchor="middle" fill="white" font-size="7" font-family="Poppins,sans-serif" font-weight="700" dominant-baseline="middle">R</text>
+                        </svg>
+                        Ubicación
+                    </h3>
+                </div>
+
+                <!-- Google Maps embed (lat/lng replaced dynamically) -->
+                <iframe
+                    id="map-frame"
+                    class="map-frame"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen
+                    loading="lazy">
+                </iframe>
+
+                <div class="map-address">
+                    <span>📍</span>
+                    <span id="map-address-text">—</span>
+                </div>
+
+                <a id="btn-maps" class="btn-maps" target="_blank" rel="noopener noreferrer">
+                    🗺 Ver en Google Maps
+                </a>
+            </div>
+
+            <!-- AGENT CARD -->
+            <div class="agent-card">
+                <!-- Photo or initials placeholder -->
+                <div id="agent-photo-wrap">
+                    <div class="agent-card-photo-placeholder" id="agent-initials">—</div>
+                </div>
+
+                <div class="agent-card-body">
+                    <div class="agent-name" id="agent-name">—</div>
+                    <div class="agent-title">Agente RE/MAX Victoria</div>
+
+                    <div class="agent-contacts" id="agent-contacts">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <button class="btn-contact" id="btn-contact">Contactar</button>
+                    <button class="btn-contact-outline">Agendar visita</button>
+                </div>
+            </div>
+
+        </div><!-- /location-agent-row -->
+
+    </div><!-- /detail-content -->
+
+</div><!-- /container -->
+
+<!-- ─── SCRIPT ─────────────────────────────────── -->
+<script>
+/* ============================================================
+   RE/MAX Victoria — Property Detail JS
+   Reads ?id=X from the URL and fetches from the API.
+   Falls back to mock data when the API is unreachable.
+   ============================================================ */
+
+const API_BASE = 'http://localhost:3000/api';
+
+/* ── Mock fallback ──────────────────────────────── */
+const MOCK_PROPERTY = {
+    id: 1,
+    titulo: 'Terreno en venta en Col. Legisladores Durangüeños',
+    tipo: 'Terreno',
+    estado: 'En venta',
+    precio: 258000,
+    ubicacion: 'Col. Legisladores Durangüeños',
+    ciudad: 'Durango, Dgo',
+    lat: 24.0277,
+    lng: -104.6532,
+    descripcion: 'Excelente terreno ubicado en zona de crecimiento, cercano a servicios básicos e ideal para la construcción de vivienda o proyecto comercial.',
+    destacados: [
+        'Zona en crecimiento',
+        'Cercano a servicios básicos',
+        'Ideal para la construcción',
+        'Escrituras al corriente'
+    ],
+    recamaras: null,
+    banos: null,
+    m2: 312,
+    imagenes: [
+        'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900&q=80',
+        'https://images.unsplash.com/photo-1628744448839-a475cc0e90a4?w=600&q=80',
+        'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=600&q=80'
+    ],
+    agente: {
+        nombre: 'Juan Perez',
+        telefono: '618-123-36-54',
+        email: 'juan.perez.remax@gmail.com',
+        foto: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80'
+    }
+};
+
+/* ── Helpers ────────────────────────────────────── */
+function getQueryParam(key) {
+    return new URLSearchParams(window.location.search).get(key);
+}
+
+function formatPrice(price) {
+    if (!price) return 'Precio no disponible';
+    return new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+        minimumFractionDigits: 0
+    }).format(price);
+}
+
+function initials(name) {
+    if (!name) return '?';
+    return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+}
+
+/* ── Fetch property ─────────────────────────────── */
+async function fetchProperty(id) {
+    // If no id in URL, use mock directly
+    if (!id) return MOCK_PROPERTY;
+
+    try {
+        const res = await fetch(`${API_BASE}/propiedades/${id}`);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const json = await res.json();
+        // Normalize possible wrapper keys
+        return json.data ?? json.Data ?? json.propiedad ?? json;
+    } catch (err) {
+        console.warn('API no disponible, usando mock:', err.message);
+        return { ...MOCK_PROPERTY, id };
+    }
+}
+
+/* ── Render ─────────────────────────────────────── */
+function render(prop) {
+
+    /* breadcrumb */
+    document.getElementById('bc-title').textContent = prop.titulo || 'Propiedad';
+
+    /* badge */
+    const badge = document.getElementById('prop-badge');
+    badge.textContent = [prop.tipo, prop.estado].filter(Boolean).join(' · ') || 'RE/MAX';
+
+    /* title */
+    document.getElementById('prop-title').textContent = prop.titulo || 'Propiedad';
+
+    /* meta row */
+    const metas = [];
+    if (prop.ciudad || prop.ubicacion)
+        metas.push(`<span>📍 ${[prop.ubicacion, prop.ciudad].filter(Boolean).join(', ')}</span>`);
+    if (prop.m2) metas.push(`<span>📐 ${prop.m2} m²</span>`);
+    if (prop.recamaras) metas.push(`<span>🛏 ${prop.recamaras} rec.</span>`);
+    if (prop.banos) metas.push(`<span>🚿 ${prop.banos} baños</span>`);
+    document.getElementById('prop-meta').innerHTML = metas.join('');
+
+    /* price */
+    document.getElementById('prop-price').textContent = formatPrice(prop.precio || prop.price);
+
+    /* ── Gallery ── */
+    const imgs = prop.imagenes || prop.images || (prop.imagen ? [prop.imagen] : []);
+    const fallback = `https://picsum.photos/seed/${prop.id || 1}/900/600`;
+    const main = imgs[0] || fallback;
+    const thumb1 = imgs[1] || `https://picsum.photos/seed/${(prop.id || 1) + 10}/600/400`;
+    const thumb2 = imgs[2] || `https://picsum.photos/seed/${(prop.id || 1) + 20}/600/400`;
+    const extra = Math.max(0, imgs.length - 3);
+
+    document.getElementById('gallery-grid').innerHTML = `
+        <div class="gallery-main">
+            <img src="${main}" alt="${prop.titulo}" loading="eager">
+        </div>
+        <div class="gallery-thumb">
+            <img src="${thumb1}" alt="Foto 2" loading="lazy">
+        </div>
+        <div class="gallery-thumb">
+            <img src="${thumb2}" alt="Foto 3" loading="lazy">
+            ${extra > 0 ? `<div class="gallery-overlay">+${extra} fotos</div>` : ''}
+        </div>`;
+
+    /* ── Features ── */
+    const features = [];
+    if (prop.recamaras) features.push({ icon: '🛏', label: `${prop.recamaras} Recámaras` });
+    if (prop.banos)     features.push({ icon: '🚿', label: `${prop.banos} Baños` });
+    if (prop.m2)        features.push({ icon: '📐', label: `${prop.m2} m²` });
+    if (prop.tipo)      features.push({ icon: '🏷️', label: prop.tipo });
+    if (prop.estado)    features.push({ icon: '🔖', label: prop.estado });
+    if (prop.ciudad)    features.push({ icon: '🏙️', label: prop.ciudad });
+
+    if (features.length > 0) {
+        document.getElementById('features-grid').innerHTML =
+            features.map(f => `
+                <div class="feature-item">
+                    <span class="fi-icon">${f.icon}</span>
+                    <span>${f.label}</span>
+                </div>`).join('');
+        document.getElementById('section-features').style.display = 'block';
+    }
+
+    /* ── Description ── */
+    const desc = prop.descripcion || prop.description || '';
+    if (desc) {
+        document.getElementById('prop-desc').textContent = desc;
+        document.getElementById('section-desc').style.display = 'block';
+    }
+
+    /* ── Bullet points ── */
+    const bullets = prop.destacados || prop.highlights || [];
+    if (bullets.length > 0) {
+        document.getElementById('bullets-list').innerHTML =
+            bullets.map(b => `<li>${b}</li>`).join('');
+        document.getElementById('section-bullets').style.display = 'block';
+    }
+
+    /* ── Map ── */
+    const lat = prop.lat || prop.latitud || 24.0277;
+    const lng = prop.lng || prop.longitud || -104.6532;
+    const addrText = [prop.ubicacion, prop.ciudad].filter(Boolean).join(', ') || 'Durango, Dgo';
+
+    // Embed using OpenStreetMap (no API key required)
+    const mapSrc = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+    document.getElementById('map-frame').src = mapSrc;
+
+    document.getElementById('map-address-text').textContent = addrText;
+    document.getElementById('btn-maps').href =
+        `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+    /* ── Agent ── */
+    const agente = prop.agente || {};
+    const nombre  = agente.nombre  || agente.name  || prop.agenteName || 'Agente RE/MAX';
+    const telefono = agente.telefono || agente.phone || prop.telefono || '';
+    const email    = agente.email   || prop.email   || '';
+    const foto     = agente.foto    || agente.photo || agente.imagen  || '';
+
+    document.getElementById('agent-name').textContent = nombre;
+    document.getElementById('agent-initials').textContent = initials(nombre);
+
+    // If photo available replace placeholder
+    if (foto) {
+        const wrap = document.getElementById('agent-photo-wrap');
+        wrap.innerHTML = `<img src="${foto}" class="agent-card-photo" alt="${nombre}" loading="lazy">`;
+    }
+
+    const contacts = [];
+    if (telefono) contacts.push({ icon: '📞', value: telefono, href: `tel:${telefono.replace(/\s/g,'')}` });
+    if (email)    contacts.push({ icon: '✉️', value: email, href: `mailto:${email}` });
+
+    document.getElementById('agent-contacts').innerHTML =
+        contacts.map(c => `
+            <div class="agent-contact-item">
+                <div class="ci-icon">${c.icon}</div>
+                <a href="${c.href}" style="color:inherit;text-decoration:none;">${c.value}</a>
+            </div>`).join('');
+
+    // Contact button
+    const ctaHref = telefono
+        ? `https://wa.me/${telefono.replace(/\D/g,'')}?text=Hola, me interesa la propiedad: ${encodeURIComponent(prop.titulo || '')}`
+        : (email ? `mailto:${email}` : '#');
+
+    document.getElementById('btn-contact').addEventListener('click', () => {
+        window.open(ctaHref, '_blank');
+    });
+}
+
+/* ── Init ───────────────────────────────────────── */
+async function init() {
+    const id = getQueryParam('id');
+    document.getElementById('loading-screen').style.display = 'block';
+    document.getElementById('detail-content').style.display = 'none';
+    document.getElementById('error-screen').style.display   = 'none';
+
+    try {
+        const property = await fetchProperty(id);
+        render(property);
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('detail-content').style.display = 'block';
+    } catch (err) {
+        console.error(err);
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('error-screen').style.display   = 'block';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
