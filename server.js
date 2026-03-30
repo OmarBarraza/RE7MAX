@@ -55,7 +55,7 @@ app.listen(PORT, () => {
 ║                                                       ║
 ║   ✅ Servidor corriendo en: http://localhost:${PORT}     ║
 ║                                                       ║
-║   📂 Abre: http://localhost:${PORT}/remax-fixed.html    ║
+║   📂 Abre: http://localhost:${PORT}    ║
 ║                                                       ║
 ║   🔧 Proxy activo - Sin problemas de CORS            ║
 ║                                                       ║

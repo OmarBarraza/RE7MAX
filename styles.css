@@ -10,7 +10,7 @@
   --primary-blue:#1f4e79;
   --remax-red:#E11B22;
   --light-gray:#f5f7fa;
-  --text-dark:#2C3E50;
+  --text-dark:#0b2742;
   --text-light:#7F8C8D;
 }
 
@@ -46,7 +46,7 @@ body{
 
 /* LOGO  */
 .logo-img{
-  height:55px;   /* ajusta tamaño */
+  height:55px;
   width:auto;
   object-fit:contain;
 }
@@ -160,7 +160,7 @@ body{
 
 /* HOVER */
 .search-box:hover{
-  background:#2f3640;
+  background:#0b2742;
 }
 
 .search-box:hover .search-text{
@@ -183,8 +183,8 @@ body{
   width:100%;
 
   background-image:url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c");
-  background-size:cover;        /* 👈 ajusta bien la imagen */
-  background-position:center;   /* 👈 centra */
+  background-size:cover;
+  background-position:center;
   background-repeat:no-repeat;
 
   display:flex;
@@ -369,4 +369,71 @@ body{
   .nav-menu{
     display:none;
   }
+}
+
+/* FOOTER */
+.footer{
+  background:#0b2742;
+  color:white;
+  padding:1.5rem 2rem 1rem;
+  margin-top:3rem;
+}
+
+.footer-container{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  max-width:1200px;
+  margin:auto;
+}
+
+.footer-logo{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.footer-logo-img{
+  height:28px;
+}
+
+.footer-text{
+  font-weight:600;
+  font-size:1rem;
+}
+
+.footer-menu{
+  list-style:none;
+  display:flex;
+  gap:2rem;
+}
+
+.footer-menu a{
+  color:white;
+  text-decoration:none;
+  font-size:0.9rem;
+  transition:opacity 0.2s;
+}
+
+.footer-menu a:hover{
+  opacity:0.7;
+}
+
+.footer-icon{
+  font-size:1.3rem;
+  cursor:pointer;
+}
+
+.footer-line{
+  margin:1rem auto;
+  border:0.5px solid rgba(255,255,255,0.3);
+  max-width:1200px;
+}
+
+.footer-copy{
+  text-align:left;
+  max-width:1200px;
+  margin:auto;
+  font-size:0.75rem;
+  opacity:0.8;
 }

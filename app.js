@@ -82,9 +82,8 @@ function renderProperties(properties){
 /* ===== CLICK PROPERTY ===== */
 function selectProperty(property){
   localStorage.setItem("selectedProperty", JSON.stringify(property));
-  window.location.href = "property.html";
+  window.location.href = "property-detail.html";
 }
-
 /* ===== FILTROS ===== */
 function applyFilters(){
 
