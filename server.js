@@ -1,64 +1,90 @@
-// server.js - Servidor proxy simple para RE/MAX
-const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
-const path = require('path');
+// ============================================================
+//  RE/MAX Victoria — Proxy Server
+//  Node.js + Express
+//
+//  Instalación:
+//    npm install express node-fetch cors
+//
+//  Uso:
+//    node server.js
+//
+//  Endpoints disponibles:
+//    GET /api/propiedad/:id   → FetchPropiedadFlyerData/:id
+//    GET /api/filtros         → FetchDatosDataNew
+// ============================================================
+
+const express  = require('express');
+const cors     = require('cors');
 
 const app = express();
 const PORT = 3000;
 
-// Habilitar CORS para todas las peticiones
-app.use(cors());
-app.use(express.json());
+const REMAX_BASE = 'https://remax.com.mx/ajax';
 
-// Servir archivos estáticos (HTML)
-app.use(express.static(__dirname));
+// ── Headers que simulan un navegador real ────────────────────
+const BROWSER_HEADERS = {
+    'User-Agent':      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+    'Accept':          'application/json, text/plain, */*',
+    'Accept-Language': 'es-MX,es;q=0.9,en;q=0.8',
+    'Referer':         'https://remax.com.mx/',
+    'Origin':          'https://remax.com.mx',
+};
 
-// Proxy para todas las propiedades
-app.get('/api/propiedades', async (req, res) => {
-    try {
-        const response = await axios.get('https://remax.com.mx/ajax/FetchDatosDataNew', {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                'Accept': 'application/json',
-                'Referer': 'https://remax.com.mx/'
-            }
-        });
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error:', error.message);
-        res.status(500).json({ error: 'Error al obtener propiedades' });
-    }
-});
+// ── CORS: permite peticiones desde file:// y localhost ───────
+app.use(cors({
+    origin: (origin, cb) => cb(null, true), // acepta cualquier origen
+    methods: ['GET'],
+}));
 
-// Proxy para propiedad específica
+// ── GET /api/propiedad/:id ───────────────────────────────────
 app.get('/api/propiedad/:id', async (req, res) => {
+    const { id } = req.params;
+
+    if (!id || !/^\d+$/.test(id)) {
+        return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    const url = `${REMAX_BASE}/FetchPropiedadFlyerData/${id}`;
+    console.log(`[proxy] GET ${url}`);
+
     try {
-        const { id } = req.params;
-        const response = await axios.get(`https://remax.com.mx/ajax/FetchPropiedadFlyerData/${id}`, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                'Accept': 'application/json',
-                'Referer': 'https://remax.com.mx/'
-            }
-        });
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error:', error.message);
-        res.status(500).json({ error: 'Error al obtener propiedad' });
+        // Node 18+ tiene fetch nativo; versiones anteriores usan node-fetch
+        const fetcher = globalThis.fetch ?? require('node-fetch');
+        const upstream = await fetcher(url, { headers: BROWSER_HEADERS });
+
+        if (!upstream.ok) {
+            return res.status(upstream.status).json({
+                error: `remax.com.mx respondió ${upstream.status}`
+            });
+        }
+
+        const data = await upstream.json();
+        res.json(data);
+
+    } catch (err) {
+        console.error('[proxy] Error:', err.message);
+        res.status(500).json({ error: err.message });
     }
 });
 
+// ── GET /api/filtros ─────────────────────────────────────────
+app.get('/api/filtros', async (req, res) => {
+    const url = `${REMAX_BASE}/FetchDatosDataNew`;
+    console.log(`[proxy] GET ${url}`);
+
+    try {
+        const fetcher = globalThis.fetch ?? require('node-fetch');
+        const upstream = await fetcher(url, { headers: BROWSER_HEADERS });
+        const data = await upstream.json();
+        res.json(data);
+    } catch (err) {
+        console.error('[proxy] Error:', err.message);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ── Inicio ───────────────────────────────────────────────────
 app.listen(PORT, () => {
-    console.log(`
-╔═══════════════════════════════════════════════════════╗
-║                                                       ║
-║   ✅ Servidor corriendo en: http://localhost:${PORT}     ║
-║                                                       ║
-║   📂 Abre: http://localhost:${PORT}    ║
-║                                                       ║
-║   🔧 Proxy activo - Sin problemas de CORS            ║
-║                                                       ║
-╚═══════════════════════════════════════════════════════╝
-    `);
+    console.log(`✅ Proxy corriendo en http://localhost:${PORT}`);
+    console.log(`   Prueba: http://localhost:${PORT}/api/propiedad/666990`);
 });
