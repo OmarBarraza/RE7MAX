@@ -21,7 +21,7 @@
     <img src="img/Remaxlogoblanco.png" class="logo-img">
   </span>
 </a>
-    
+
 
     <ul class="nav-menu">
       <li class="menu-item">
@@ -100,23 +100,38 @@
         </div>
 
         <!-- Features -->
-        <div class="details-section" id="section-features" style="display:none;">
-            <h3><span class="icon">🏠</span> Características</h3>
-            <div class="features-grid" id="features-grid"></div>
-        </div>
+        <!-- Features -->
+<div class="details-section" id="section-features" style="display:none;">
+    <h3>
+        <span class="icon">
+            <img src="img/caracteristicas.png" class="logo-img" alt="Características">
+        </span>
+        Características
+    </h3>
+    <div class="features-grid" id="features-grid"></div>
+</div>
 
-        <!-- Description -->
-        <div class="details-section" id="section-desc" style="display:none;">
-            <h3><span class="icon">📋</span> Descripción</h3>
-            <p class="desc-text" id="prop-desc"></p>
-        </div>
+<!-- Description -->
+<div class="details-section" id="section-desc" style="display:none;">
+    <h3>
+        <span class="icon">
+            <img src="img/descripcion.png" class="logo-img" alt="Descripción">
+        </span>
+        Descripción
+    </h3>
+    <p class="desc-text" id="prop-desc"></p>
+</div>
 
-        <!-- Bullet points / highlights -->
-        <div class="details-section" id="section-bullets" style="display:none;">
-            <h3><span class="icon">✨</span> Destacados</h3>
-            <ul class="bullets-list" id="bullets-list"></ul>
-        </div>
-
+<!-- Bullet points -->
+<div class="details-section" id="section-bullets" style="display:none;">
+    <h3>
+        <span class="icon">
+            <img src="img/destacados.png" class="logo-img" alt="Destacados">
+        </span>
+        Destacados
+    </h3>
+    <ul class="bullets-list" id="bullets-list"></ul>
+</div>
         <!-- MAP + AGENT -->
         <div class="location-agent-row">
 
@@ -274,10 +289,10 @@ function render(prop) {
     /* meta row */
     const metas = [];
     if (prop.ciudad || prop.ubicacion)
-        metas.push(`<span>📍 ${[prop.ubicacion, prop.ciudad].filter(Boolean).join(', ')}</span>`);
-    if (prop.m2) metas.push(`<span>📐 ${prop.m2} m²</span>`);
-    if (prop.recamaras) metas.push(`<span>🛏 ${prop.recamaras} rec.</span>`);
-    if (prop.banos) metas.push(`<span>🚿 ${prop.banos} baños</span>`);
+        metas.push(`<span><img src="img/ubicacion.png" class="logo-img"> ${[prop.ubicacion, prop.ciudad].filter(Boolean).join(', ')}</span>`);
+    if (prop.m2) metas.push(`<span><img src="img/tamaño.png" class="logo-img"> ${prop.m2} m²</span>`);
+    if (prop.recamaras) metas.push(`<span><img src="img/recamaras.png" class="logo-img">${prop.recamaras} rec.</span>`);
+    if (prop.banos) metas.push(`<span><img src="img/baños.png" class="logo-img"> ${prop.banos} baños</span>`);
     document.getElementById('prop-meta').innerHTML = metas.join('');
 
     /* price */
@@ -305,12 +320,12 @@ function render(prop) {
 
     /* ── Features ── */
     const features = [];
-    if (prop.recamaras) features.push({ icon: '🛏', label: `${prop.recamaras} Recámaras` });
-    if (prop.banos)     features.push({ icon: '🚿', label: `${prop.banos} Baños` });
-    if (prop.m2)        features.push({ icon: '📐', label: `${prop.m2} m²` });
-    if (prop.tipo)      features.push({ icon: '🏷️', label: prop.tipo });
-    if (prop.estado)    features.push({ icon: '🔖', label: prop.estado });
-    if (prop.ciudad)    features.push({ icon: '🏙️', label: prop.ciudad });
+    if (prop.recamaras) features.push({ icon: '<img src="img/recamaras.png" class="logo-img">', label: `${prop.recamaras} Recámaras` });
+    if (prop.banos)     features.push({ icon: '<img src="img/baños.png" class="logo-img">', label: `${prop.banos} Baños` });
+    if (prop.m2)        features.push({ icon: '<img src="img/tamaño.png" class="logo-img">', label: `${prop.m2} m²` });
+    if (prop.tipo)      features.push({ icon: '<img src="img/terreno.png" class="logo-img">', label: prop.tipo });
+    if (prop.estado)    features.push({ icon: '<img src="img/venta.png" class="logo-img">', label: prop.estado });
+    if (prop.ciudad)    features.push({ icon: '<img src="img/ubicacion.png" class="logo-img">', label: prop.ciudad });
 
     if (features.length > 0) {
         document.getElementById('features-grid').innerHTML =

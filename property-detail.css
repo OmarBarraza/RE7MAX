@@ -552,7 +552,44 @@ body{
     color:white;
 }
 
-/* ── RESPONSIVE ──────────────────────────────────── */
+.details-section h3{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.details-section h3 .icon{
+    display: flex;
+    align-items: center;
+}
+
+.details-section h3 .icon img{
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+/* Iconos en metas (arriba de la propiedad) */
+.property-meta img.logo-img{
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+/* Iconos dentro de features */
+.feature-item img.logo-img{
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+/* Ajuste general */
+img.logo-img{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+/*  RESPONSIVE */
 @media(max-width:900px){
     .location-agent-row{
         grid-template-columns:1fr;
@@ -582,3 +619,4 @@ body{
     }
     .gallery-thumb{ display:none; }
 }
+
